@@ -15,6 +15,7 @@ import java.net.URLClassLoader;
 import java.nio.file.NoSuchFileException;
 import java.util.*;
 
+@SuppressWarnings({"unused", "ResultOfMethodCallIgnored"})
 public class BotLoader implements IBotLoader {
     private final Logger logger = LoggerFactory.getLogger(BotLoader.class);
     private final List<JavaDiscordBot> activeBots = new ArrayList<>();
@@ -25,7 +26,7 @@ public class BotLoader implements IBotLoader {
 
         File[] jarFiles = botsFolder.listFiles((dir, name) -> name.endsWith(".jar"));
         if (jarFiles == null || jarFiles.length == 0) {
-            System.out.println("⚠️ This server has no file bot in folder 'bots/'.");
+            logger.warn("This server has no file bot in folder 'bots/'.");
             return;
         }
 
@@ -52,11 +53,15 @@ public class BotLoader implements IBotLoader {
                     continue;
                 }
 
-                // Gọi constructor
+                // call constructor
                 JavaDiscordBot botInstance = (JavaDiscordBot) mainClass.getDeclaredConstructor().newInstance();
-                botInstance.internalSetMeta(meta); // cannot access package-private
+                // botInstance.internalSetMeta(meta); // cannot access package-private
+                // use Reflection to bypass package-private and set Meta
+                java.lang.reflect.Method setMetaMethod = JavaDiscordBot.class.getDeclaredMethod("internalSetMeta", IBotMeta.class);
+                setMetaMethod.setAccessible(true); // bypass
+                setMetaMethod.invoke(botInstance, meta); // inject meta
 
-                // 4. Chạy Bot trên Thread riêng biệt
+                // run bot on seperate thread
                 new Thread(() -> {
                     try {
                         botInstance.start();
@@ -64,18 +69,18 @@ public class BotLoader implements IBotLoader {
                     } catch (Exception e) {
                         logger.error("❌ Lỗi khi khởi động bot {}", meta.botName(), e);
                     }
-                }, "BotThread-" + meta.botName()).start();
+                }, "Bot-" + meta.botName()).start();
 
             } catch (NoSuchFileException e) {
-                logger.error("⚠️ Bỏ qua file {} vì không tìm thấy bot.yml", jar.getName());
+                logger.error("⚠️ Cannot run bot {} because file bot.yml is not exist!", jar.getName(), e);
             } catch (Exception e) {
-                logger.error("❌ Lỗi khi nạp bot từ file {}", jar.getName(), e);
+                logger.error("❌ Couldn't load bot {}. Is it up to date?", jar.getName(), e);
             }
         }
     }
 
     /**
-     * Hàm đọc bot.yml được truyền sẵn URLClassLoader vào để tái sử dụng
+     * Method read bot.yml with URLClassLoader is streamed to reuse
      */
     private IBotMeta getBotMetaFromJarFile(URLClassLoader childLoader, File jarFile) throws IOException {
         // find file bot.yml in file jar
@@ -130,8 +135,8 @@ public class BotLoader implements IBotLoader {
     }
 
     /**
-     * Lấy danh sách các bot đang hoạt động trên Server.
-     * Sử dụng unmodifiableList để ngăn các class bên ngoài sửa đổi mảng này.
+     * List loaded bots.
+     * Use unmodifiableList to prevent another classes modify this list.
      */
     public List<JavaDiscordBot> getActiveBots() {
         return Collections.unmodifiableList(activeBots);
