@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.utils;
+package com.dianxin.tori.api.utils.quicksetup;
 
 import net.dv8tion.jda.api.entities.Activity;
 import org.jetbrains.annotations.NotNull;
