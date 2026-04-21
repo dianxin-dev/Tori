@@ -17,19 +17,19 @@ public class BotsConsoleCommand extends AbstractConsoleCommand {
         // Lấy danh sách bot từ BotLoader thông qua MultiBotServer
         List<JavaDiscordBot> bots = Main.getServer().getBotLoader().getActiveBots();
         if (bots.isEmpty()) {
-            getLogger().info("📦 Hiện tại không có bot nào đang hoạt động trên hệ thống.");
+            getLogger().info("📦 No bots are loaded on this server.");
             return;
         }
 
         // Dùng StringBuilder để format danh sách cho đẹp
         StringBuilder sb = new StringBuilder();
-        sb.append("📦 Các Bot đang hoạt động (").append(bots.size()).append("):\n");
+        sb.append("📦 Running bots (").append(bots.size()).append("):\n");
 
         for (JavaDiscordBot bot : bots) {
             IBotMeta meta = bot.getMeta();
             sb.append("  ✅ ").append(meta.botName())
                     .append(" v").append(meta.botVersion())
-                    .append(" | Tác giả: ").append(meta.botAuthor());
+                    .append(" | Author: ").append(meta.botAuthor());
 
             // Nếu có mô tả thì in thêm
             if (meta.botDescription() != null && !meta.botDescription().isBlank()) {

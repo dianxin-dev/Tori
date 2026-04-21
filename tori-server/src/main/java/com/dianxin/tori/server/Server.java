@@ -36,6 +36,8 @@ public class Server implements ToriServer {
             throw new IllegalStateException("Server is already running!");
         }
 
+        isRunning = true;
+
         ExecutorManager.initialize(); // initialize all executors variables that can run async tasks on IAction, ResultedAction...
 
         this.serverConfiguration = cf;
@@ -58,6 +60,7 @@ public class Server implements ToriServer {
 
         botLoader.shutdownAll();
         ExecutorManager.shutdown();
+        scheduler.shutdown();
 
         logger.info("Done! Good bye!");
     }

@@ -6,8 +6,24 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
-public record BotMeta(String botName, String botDescription, String botVersion, String botAuthor,
-                      List<String> botContributors, String mainClassPath) implements IBotMeta {
+public class BotMeta implements IBotMeta {
+    private final String botName;
+    private final String botDescription;
+    private final String botVersion;
+    private final String botAuthor;
+    private final List<String> botContributors;
+    private final String mainClassPath;
+
+    public BotMeta(String botName, String botDescription, String botVersion, String botAuthor,
+                   List<String> botContributors, String mainClassPath) {
+        this.botName = botName;
+        this.botDescription = botDescription;
+        this.botVersion = botVersion;
+        this.botAuthor = botAuthor;
+        this.botContributors = botContributors;
+        this.mainClassPath = mainClassPath;
+    }
+
     @Override
     public @NotNull String botName() {
         return botName;
