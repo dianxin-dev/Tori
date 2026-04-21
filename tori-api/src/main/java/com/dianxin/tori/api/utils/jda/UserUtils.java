@@ -21,14 +21,13 @@ import java.time.OffsetDateTime;
 @SuppressWarnings("unused")
 public final class UserUtils {
     @NotNull private static final JDA jda = ToriServices.getJda();
-    @NotNull private final JavaDiscordBot bot = ToriServices.getBaseBot();
 
     private UserUtils() {
         throw new UnsupportedOperationException("Utility class");
     }
 
     /**
-     * Mention người dùng (vd: {@code <@123456789>}).
+     * Mention user (ex: {@code <@123456789>}).
      */
     @NotNull
     public static String mention(@NotNull User user) {
@@ -36,7 +35,7 @@ public final class UserUtils {
     }
 
     /**
-     * Lấy ID của người dùng.
+     * get ID of user.
      */
     @NotNull
     public static String id(@NotNull User user) {
@@ -44,7 +43,7 @@ public final class UserUtils {
     }
 
     /**
-     * Lấy username (name gốc, không discriminator).
+     * get username (get rootname, not discriminator).
      */
     @NotNull
     public static String username(@NotNull User user) {
@@ -52,9 +51,9 @@ public final class UserUtils {
     }
 
     /**
-     * Lấy global name của người dùng (có thể null).
+     * get global name of user (nullable).
      *
-     * @return global name hoặc {@code null} nếu người dùng chưa đặt
+     * @return global name or {@code null} if that user is not set
      */
     @Nullable
     public static String globalName(@NotNull User user) {
@@ -62,15 +61,15 @@ public final class UserUtils {
     }
 
     /**
-     * Lấy tên hiển thị an toàn để show cho người dùng.
+     * Get safe nickname of user.
      * <p>
-     * Ưu tiên:
+     * Priority:
      * <ol>
-     *   <li>Global name (nếu có)</li>
+     *   <li>Global name</li>
      *   <li>Username</li>
      * </ol>
      *
-     * @return tên hiển thị, không bao giờ null
+     * @return main nickname of user
      */
     @NotNull
     public static String displayName(@NotNull User user) { // relative User#getEffectiveName

@@ -1,7 +1,6 @@
 package com.dianxin.tori.api.commands;
 
-import com.dianxin.core.jda.meta.BotMeta;
-import com.dianxin.core.jda.utils.services.ToriServices;
+import com.dianxin.tori.api.bot.IBotMeta;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -27,7 +26,7 @@ import java.util.List;
 public abstract class LegacyBaseCommand {
     private final Logger logger;
     private final JDA jda;
-    private final BotMeta botMeta;
+    private final IBotMeta botMeta;
 
     // Cấu hình lệnh
     private final boolean isDefer; // mặc định false
@@ -40,21 +39,9 @@ public abstract class LegacyBaseCommand {
     private final boolean isDebug; // mặc định false
 
     /**
-     * Khởi tạo cấu hình lệnh (Sử dụng ToriServices mặc định)
-     */
-    public LegacyBaseCommand(boolean isDefer, boolean guildOnly, boolean ownerOnly,
-                             boolean privateChannelOnly, boolean directMessageOnly,
-                             List<Permission> permissionsRequired,
-                             List<Permission> selfPermissionsRequired,
-                             boolean isDebug) {
-        this(ToriServices.getJda(), ToriServices.getBotMeta(), isDefer, guildOnly, ownerOnly,
-                privateChannelOnly, directMessageOnly, permissionsRequired, selfPermissionsRequired, isDebug);
-    }
-
-    /**
      * Khởi tạo cấu hình lệnh với JDA và BotMeta thủ công
      */
-    public LegacyBaseCommand(JDA jda, BotMeta meta, boolean isDefer, boolean guildOnly, boolean ownerOnly,
+    public LegacyBaseCommand(JDA jda, IBotMeta meta, boolean isDefer, boolean guildOnly, boolean ownerOnly,
                              boolean privateChannelOnly, boolean directMessageOnly,
                              List<Permission> permissionsRequired,
                              List<Permission> selfPermissionsRequired,
@@ -74,16 +61,9 @@ public abstract class LegacyBaseCommand {
     }
 
     /**
-     * Khởi tạo cấu hình lệnh thông qua Builder (Sử dụng ToriServices mặc định)
-     */
-    public LegacyBaseCommand(LegacyCommandBuilder builder) {
-        this(ToriServices.getJda(), ToriServices.getBotMeta(), builder);
-    }
-
-    /**
      * Khởi tạo cấu hình lệnh thông qua Builder với JDA và BotMeta thủ công
      */
-    public LegacyBaseCommand(JDA jda, BotMeta meta, LegacyCommandBuilder builder) {
+    public LegacyBaseCommand(JDA jda, IBotMeta meta, LegacyCommandBuilder builder) {
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.jda = jda;
         this.botMeta = meta;

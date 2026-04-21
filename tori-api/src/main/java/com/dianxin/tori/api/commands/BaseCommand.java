@@ -24,15 +24,6 @@ public abstract class BaseCommand {
     private final BotMeta botMeta;
 
     /**
-     * Khởi tạo Base Command, sử dụng DianxinServices
-     * @throws ServiceUnavailableException Khi ToriService chưa được init, khắc phục bằng cách
-     * thêm {@link RegisterToriService} vào JavaDiscordBot được extend.
-     */
-    public BaseCommand() {
-        this(ToriServices.getJda(), ToriServices.getBotMeta());
-    }
-
-    /**
      * Khởi tạo Base Command, sử dụng jda thủ công
      * @param jda JDA thủ công được truyền vào
      * @param meta Bot Meta thủ công được truyền vòa
