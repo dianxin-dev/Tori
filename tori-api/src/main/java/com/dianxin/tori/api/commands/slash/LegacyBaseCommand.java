@@ -122,7 +122,7 @@ public abstract class LegacyBaseCommand {
     private boolean checkOwnerOnly(SlashCommandInteractionEvent event) {
         if (!this.ownerOnly) return true;
 
-        if (!event.getUser().getId().equals(botMeta.getBotOwnerId())) {
+        if (!event.getUser().getId().equals(botMeta.botOwnerId())) {
             event.reply("❌ Chỉ owner mới được dùng lệnh này.").setEphemeral(true).queue();
             return false;
         }

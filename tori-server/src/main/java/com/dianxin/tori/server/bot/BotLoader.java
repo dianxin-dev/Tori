@@ -111,6 +111,9 @@ public class BotLoader implements IBotLoader {
 
             String mainClassPath = String.valueOf(config.get("main"));
 
+            String botWebsite = String.valueOf(config.get("website"));
+            String ownerId = String.valueOf(config.get("ownerId"));
+
             if(botName == null) {
                 throw new IllegalStateException("Name field ('name') is not specified");
             }
@@ -123,13 +126,19 @@ public class BotLoader implements IBotLoader {
                 throw new IllegalStateException("Main class path field ('main') is not specified");
             }
 
+            if(ownerId == null) {
+                throw new IllegalStateException("Owner ID field ('ownerId') is not specified");
+            }
+
             return new BotMeta(
                     botName,
                     desc == null ? "" : desc,
                     version == null ? "unknown-version" : version,
                     author,
                     contributors.isEmpty() ? List.of() : contributors,
-                    mainClassPath
+                    mainClassPath,
+                    botWebsite,
+                    ownerId
             );
         }
     }

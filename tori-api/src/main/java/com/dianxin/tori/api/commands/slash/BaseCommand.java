@@ -71,7 +71,7 @@ public abstract class BaseCommand {
     private boolean checkOwnerOnly(SlashCommandInteractionEvent event) {
         if (!getClass().isAnnotationPresent(OwnerOnly.class)) return true;
 
-        if(!event.getUser().getId().equals(botMeta.getBotOwnerId())) {
+        if(!event.getUser().getId().equals(botMeta.botOwnerId())) {
             event.reply("❌ Chỉ owner mới được dùng lệnh này.").setEphemeral(true).queue();
             return false;
         }

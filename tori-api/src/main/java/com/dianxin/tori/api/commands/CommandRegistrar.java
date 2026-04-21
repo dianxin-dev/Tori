@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * annotations/metadata, committing them to the Discord API, and routing incoming
  * interaction events to their respective execution classes.
  */
-@SuppressWarnings({"removal", "unused", "FieldCanBeLocal", "ExtractMethodRecommender", "LoggingSimilarMessage"})
+@SuppressWarnings({"unused", "FieldCanBeLocal", "ExtractMethodRecommender", "LoggingSimilarMessage"})
 public class CommandRegistrar {
     private static final Logger logger = LoggerFactory.getLogger(CommandRegistrar.class);
     private final JDA jda;

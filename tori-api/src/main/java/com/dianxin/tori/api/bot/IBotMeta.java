@@ -1,6 +1,7 @@
 package com.dianxin.tori.api.bot;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
@@ -57,7 +58,20 @@ public interface IBotMeta {
      */
     @NotNull String mainClassPath();
 
-    // @Nullable String botWebsite(); coming soon
+    /**
+     * Gets the official website or promotional page for the bot.
+     *
+     * @return The URL of the bot's website, or {@code null} if not provided.
+     */
+    @Nullable String botWebsite();
 
-    // @Nullable String botOwnerId(); coming soon
+    /**
+     * Gets the Discord User ID of the bot's primary owner.
+     * <p>
+     * This is typically used by the framework to verify owner-exclusive permissions,
+     * such as restricting access to commands annotated with {@code @OwnerOnly}.
+     *
+     * @return The snowflake ID of the bot owner.
+     */
+    @NotNull String botOwnerId();
 }
