@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.contextmenu;
+package com.dianxin.tori.api.commands.usercontext;
 
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import org.jetbrains.annotations.ApiStatus;

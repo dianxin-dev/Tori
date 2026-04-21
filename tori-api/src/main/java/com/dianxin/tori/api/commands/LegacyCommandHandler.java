@@ -1,5 +1,6 @@
 package com.dianxin.tori.api.commands;
 
+import com.dianxin.tori.api.commands.slash.LegacyBaseCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

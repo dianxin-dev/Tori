@@ -1,6 +1,5 @@
-package com.dianxin.tori.api.commands;
+package com.dianxin.tori.api.commands.slash;
 
-import com.dianxin.core.api.exceptions.ServiceUnavailableException;
 import com.dianxin.core.jda.annotations.commands.*;
 import com.dianxin.core.jda.annotations.lifecycle.RegisterToriService;
 import com.dianxin.core.jda.meta.BotMeta;

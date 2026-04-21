@@ -3,6 +3,7 @@ package com.dianxin.tori.api.contextmenu;
 import com.dianxin.core.api.exceptions.InvalidRegistrationNameException;
 import com.dianxin.core.api.exceptions.MissingAnnotationException;
 import com.dianxin.core.jda.annotations.contextmenu.ContextMenu;
+import com.dianxin.tori.api.commands.usercontext.BaseUserContextMenu;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

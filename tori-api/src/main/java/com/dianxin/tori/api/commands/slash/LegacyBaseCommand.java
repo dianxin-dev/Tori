@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.commands;
+package com.dianxin.tori.api.commands.slash;
 
 import com.dianxin.tori.api.bot.IBotMeta;
 import net.dv8tion.jda.api.JDA;

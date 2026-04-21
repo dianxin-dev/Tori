@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.contextmenu;
+package com.dianxin.tori.api.commands.messagecontext;
 
 import org.jetbrains.annotations.ApiStatus;
 
