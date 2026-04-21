@@ -56,13 +56,13 @@
         <dependency>
             <groupId>com.github.curseletcraft.DianxinCore</groupId>
             <artifactId>dianxin-api</artifactId>
-            <version>2.2.3</version>
+            <version>2.2.5</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.curseletcraft.DianxinCore</groupId>
             <artifactId>dianxin-simple-logger-pack</artifactId>
-            <version>2.2.3</version>
+            <version>2.2.5</version>
         </dependency>
     </dependencies>
 
