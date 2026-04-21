@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.commands;
+package com.dianxin.tori.api.archieve;
 
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;

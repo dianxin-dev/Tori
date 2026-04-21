@@ -31,14 +31,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The central registrar for all Discord interactions including Slash Commands,
+ * User Context Menus, and Message Context Menus.
+ * <p>
+ * This class handles loading the commands into the bot's memory, validating their
+ * annotations/metadata, committing them to the Discord API, and routing incoming
+ * interaction events to their respective execution classes.
+ */
 @SuppressWarnings({"removal", "unused", "FieldCanBeLocal", "ExtractMethodRecommender", "LoggingSimilarMessage"})
 public class CommandRegistrar {
     private static final Logger logger = LoggerFactory.getLogger(CommandRegistrar.class);
     private final JDA jda;
     private final JavaDiscordBot bot;
 
-    // Lưu trữ các lệnh đã đăng ký.
-    // Key là tên lệnh (vd: "play", "ban"), Value là class thực thi lệnh đó.
     private final Map<String, LegacyBaseCommand> slashCmds = new HashMap<>();
     private final Map<String, IUserContextMenu> userContextCmds = new HashMap<>();
     private final Map<String, IMessageContextMenu> messageContextCmds = new HashMap<>();
@@ -51,7 +57,12 @@ public class CommandRegistrar {
     }
 
     /**
-     * Đăng ký một hoặc nhiều lệnh vào bộ nhớ của bot.
+     * Registers one or more legacy slash commands into the system.
+     *
+     * @param cmdInstances An array of {@link LegacyBaseCommand} instances to register.
+     * @return This {@link CommandRegistrar} instance for method chaining.
+     * @throws IllegalStateException    If commands have already been committed to Discord.
+     * @throws IllegalArgumentException If a command does not implement {@link MaincommandRegistry}.
      */
     public CommandRegistrar registerSlash(LegacyBaseCommand... cmdInstances) {
         if (commitedAll.get()) {
@@ -75,6 +86,13 @@ public class CommandRegistrar {
         return this;
     }
 
+    /**
+     * Registers one or more base user context menus.
+     *
+     * @param contextMenu An array of {@link BaseUserContextMenu} instances.
+     * @return This {@link CommandRegistrar} instance for method chaining.
+     * @throws IllegalStateException If commands have already been committed.
+     */
     public CommandRegistrar registerUserContext(BaseUserContextMenu... contextMenu) {
         if (commitedAll.get()) {
             throw new IllegalStateException("Cannot register more command after you've commited all!");
@@ -89,6 +107,15 @@ public class CommandRegistrar {
         return this;
     }
 
+    /**
+     * Registers one or more modern user context menus.
+     * Modern context menus rely on the {@link ContextMenu} annotation for metadata.
+     *
+     * @param contextMenu An array of {@link ModernBaseUserContextMenu} instances.
+     * @return This {@link CommandRegistrar} instance for method chaining.
+     * @throws IllegalStateException      If commands have already been committed, or if the interaction name is empty.
+     * @throws MissingAnnotationException If the required {@link ContextMenu} annotation is absent.
+     */
     public CommandRegistrar registerUserContext(ModernBaseUserContextMenu... contextMenu) {
         if (commitedAll.get()) {
             throw new IllegalStateException("Cannot register more command after you've commited all!");
@@ -114,6 +141,13 @@ public class CommandRegistrar {
         return this;
     }
 
+    /**
+     * Registers one or more base message context menus.
+     *
+     * @param contextMenus An array of {@link BaseMessageContextMenu} instances.
+     * @return This {@link CommandRegistrar} instance for method chaining.
+     * @throws IllegalStateException If commands have already been committed.
+     */
     public CommandRegistrar registerMessageContext(BaseMessageContextMenu... contextMenus) {
         if (commitedAll.get()) {
             throw new IllegalStateException("Cannot register more command after you've commited all!");
@@ -128,6 +162,15 @@ public class CommandRegistrar {
         return this;
     }
 
+    /**
+     * Registers one or more modern message context menus.
+     * Modern context menus rely on the {@link ContextMenu} annotation for metadata.
+     *
+     * @param contextMenus An array of {@link ModernBaseMessageContextMenu} instances.
+     * @return This {@link CommandRegistrar} instance for method chaining.
+     * @throws IllegalStateException      If commands have already been committed, or if the interaction name is empty.
+     * @throws MissingAnnotationException If the required {@link ContextMenu} annotation is absent.
+     */
     public CommandRegistrar registerMessageContext(ModernBaseMessageContextMenu... contextMenus) {
         if (commitedAll.get()) {
             throw new IllegalStateException("Cannot register more command after you've commited all!");
@@ -156,7 +199,12 @@ public class CommandRegistrar {
     // ===== Commit commands =====
 
     /**
-     * Gửi toàn bộ danh sách lệnh lên máy chủ Discord.
+     * Commits all registered commands (Slash, User Context, Message Context) to the Discord API.
+     * <p>
+     * If a guild is provided, the commands are registered instantly to that specific guild.
+     * If the guild is {@code null}, they are registered globally (which may take up to an hour to cache on Discord's end).
+     *
+     * @param guild The target {@link Guild} to register commands to, or {@code null} for global registration.
      */
     public void commitAllCommands(@Nullable Guild guild) {
         if (commitedAll.getAndSet(true)) return; // prevent call twice
@@ -170,7 +218,7 @@ public class CommandRegistrar {
         }
 
         for (Map.Entry<String, IUserContextMenu> entry1 : userContextCmds.entrySet()) {
-            CommandData data = Commands.message(entry1.getKey());
+            CommandData data = Commands.user(entry1.getKey());
             commandDataList.add(data);
         }
 
@@ -180,15 +228,17 @@ public class CommandRegistrar {
         }
 
         updateAction.addCommands(commandDataList).queue(
-                commands -> System.out.println("✅ Đã cập nhật thành công " + commandDataList.size() + " lệnh lên Discord!"),
-                error -> System.err.println("❌ Lỗi cập nhật lệnh: " + error.getMessage())
+                commands -> System.out.println("✅ Updated " + commandDataList.size() + " commands on Discord!"),
+                error -> System.err.println("❌ An error occured when updating commands!" + error.getMessage())
         );
     }
 
     // ===== Handle events =====
 
     /**
-     * Hàm này sẽ được gọi từ một ListenerAdapter để xử lý khi có người dùng gõ lệnh.
+     * Routes an incoming slash command event to the appropriate registered command handler.
+     *
+     * @param event The {@link SlashCommandInteractionEvent} triggered by Discord.
      */
     public void onSlashCommandEvent(SlashCommandInteractionEvent event) {
         String commandName = event.getName();
@@ -202,6 +252,11 @@ public class CommandRegistrar {
         command.handle(event); // execute command
     }
 
+    /**
+     * Routes an incoming user context menu event to the appropriate registered handler.
+     *
+     * @param event The {@link UserContextInteractionEvent} triggered by Discord.
+     */
     public void onUserContextEvent(UserContextInteractionEvent event) {
         IUserContextMenu menu = userContextCmds.get(event.getName());
         if (menu == null) {
@@ -212,6 +267,11 @@ public class CommandRegistrar {
         menu.execute(event);
     }
 
+    /**
+     * Routes an incoming message context menu event to the appropriate registered handler.
+     *
+     * @param event The {@link MessageContextInteractionEvent} triggered by Discord.
+     */
     public void onMessageContextEvent(MessageContextInteractionEvent event) {
         IMessageContextMenu menu = messageContextCmds.get(event.getName());
         if (menu == null) {

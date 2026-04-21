@@ -1,5 +1,6 @@
-package com.dianxin.tori.api.commands;
+package com.dianxin.tori.api.archieve;
 
+import com.dianxin.tori.api.commands.CommandRegistrar;
 import com.dianxin.tori.api.commands.registry.MaincommandRegistry;
 import com.dianxin.tori.api.commands.slash.LegacyBaseCommand;
 import net.dv8tion.jda.api.JDA;
