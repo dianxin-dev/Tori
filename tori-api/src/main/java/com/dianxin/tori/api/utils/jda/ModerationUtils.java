@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.utils;
+package com.dianxin.tori.api.utils.jda;
 
 import com.dianxin.core.jda.utils.services.ToriServices;
 import net.dv8tion.jda.api.JDA;

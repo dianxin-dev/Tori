@@ -1,6 +1,6 @@
-package com.dianxin.tori.api.utils;
+package com.dianxin.tori.api.utils.jda;
 
-import com.dianxin.core.jda.utils.services.ToriServices;
+import com.dianxin.tori.api.bot.JavaDiscordBot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.RestAction;

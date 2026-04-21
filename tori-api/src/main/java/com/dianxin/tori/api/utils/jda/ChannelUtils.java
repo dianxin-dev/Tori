@@ -1,4 +1,4 @@
-package com.dianxin.tori.api.utils;
+package com.dianxin.tori.api.utils.jda;
 
 import com.dianxin.core.api.exceptions.ServiceUnavailableException;
 import com.dianxin.core.jda.utils.services.ToriServices;
@@ -13,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.ScheduledForRemoval(inVersion = "2.2.5")
 @SuppressWarnings({"unused"})
 public final class ChannelUtils {
-    @NotNull
-    private static final JavaDiscordBot bot = ToriServices.getBaseBot();
-
     @NotNull
     private static final JDA jda = bot.getJda();
 
