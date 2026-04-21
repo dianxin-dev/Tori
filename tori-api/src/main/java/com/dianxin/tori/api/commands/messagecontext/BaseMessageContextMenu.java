@@ -1,11 +1,32 @@
 package com.dianxin.tori.api.commands.messagecontext;
 
-import org.jetbrains.annotations.ApiStatus;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-// TODO
-@Deprecated(forRemoval = true)
-@ApiStatus.ScheduledForRemoval(inVersion = "2.2.5")
-@ApiStatus.AvailableSince("2.3")
-public abstract class BaseMessageContextMenu {
+public abstract class BaseMessageContextMenu implements IMessageContextMenu {
+    protected final Logger logger;
 
+    private final String title;
+    private final JDA jda;
+
+    public BaseMessageContextMenu(String title, Command.Type type, JDA jda) {
+        this.title = title;
+        this.jda = jda;
+        this.logger = LoggerFactory.getLogger(getClass());
+    }
+
+    protected JDA getJda() {
+        return jda;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void execute(UserContextInteractionEvent event) {
+
+    }
 }

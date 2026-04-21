@@ -1,23 +1,24 @@
 package com.dianxin.tori.api.commands;
 
-import com.dianxin.core.api.exceptions.InvalidRegistrationNameException;
-import com.dianxin.core.api.exceptions.MissingAnnotationException;
 import com.dianxin.tori.api.annotations.contextmenu.ContextMenu;
 import com.dianxin.tori.api.bot.JavaDiscordBot;
 import com.dianxin.tori.api.commands.messagecontext.BaseMessageContextMenu;
+import com.dianxin.tori.api.commands.messagecontext.IMessageContextMenu;
+import com.dianxin.tori.api.commands.messagecontext.ModernBaseMessageContextMenu;
+import com.dianxin.tori.api.commands.registry.MaincommandRegistry;
+import com.dianxin.tori.api.commands.slash.BaseCommand;
 import com.dianxin.tori.api.commands.slash.LegacyBaseCommand;
 import com.dianxin.tori.api.commands.usercontext.BaseUserContextMenu;
+import com.dianxin.tori.api.commands.usercontext.IUserContextMenu;
+import com.dianxin.tori.api.commands.usercontext.ModernBaseUserContextMenu;
+import com.dianxin.tori.api.exceptions.MissingAnnotationException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Stream;
 
-@SuppressWarnings({"removal", "unused"}) // todo
+@SuppressWarnings({"removal", "unused", "FieldCanBeLocal", "ExtractMethodRecommender", "LoggingSimilarMessage"})
+// todo support annotated classes
 public class CommandRegistrar {
     private static final Logger logger = LoggerFactory.getLogger(CommandRegistrar.class);
     private final JDA jda;
@@ -37,7 +38,9 @@ public class CommandRegistrar {
 
     // Lưu trữ các lệnh đã đăng ký.
     // Key là tên lệnh (vd: "play", "ban"), Value là class thực thi lệnh đó.
-    private final Map<String, LegacyBaseCommand> commands = new HashMap<>();
+    private final Map<String, LegacyBaseCommand> slashCmds = new HashMap<>();
+    private final Map<String, IUserContextMenu> userContextCmds = new HashMap<>();
+    private final Map<String, IMessageContextMenu> messageContextCmds = new HashMap<>();
 
     private final AtomicBoolean commitedAll = new AtomicBoolean(false);
 
@@ -49,32 +52,116 @@ public class CommandRegistrar {
     /**
      * Đăng ký một hoặc nhiều lệnh vào bộ nhớ của bot.
      */
-    public CommandRegistrar registerCommands(LegacyBaseCommand... cmdInstances) {
+    public CommandRegistrar registerSlash(LegacyBaseCommand... cmdInstances) {
         if (commitedAll.get()) {
-            throw new IllegalStateException("Không thể đăng ký thêm lệnh sau khi đã commit!");
+            throw new IllegalStateException("Cannot register more command after you've commited all!");
         }
 
         for (LegacyBaseCommand cmd : cmdInstances) {
             if (cmd instanceof MaincommandRegistry registry) {
                 String commandName = registry.getCommand().getName(); // Tự động lấy tên lệnh từ CommandData để làm Key
-                commands.put(commandName, cmd);
+                slashCmds.put(commandName, cmd);
             } else {
                 throw new IllegalArgumentException("Lệnh " + cmd.getClass().getSimpleName() + " phải implements MaincommandRegistry!");
             }
         }
-        return this; // Hỗ trợ chaining (nối chuỗi lệnh)
+        return this;
     }
+
+    public CommandRegistrar registerSlash(BaseCommand... cmds) {
+        // TODO
+    }
+
+    public CommandRegistrar registerUserContext(BaseUserContextMenu... contextMenu) {
+        if (commitedAll.get()) {
+            throw new IllegalStateException("Cannot register more command after you've commited all!");
+        }
+
+        for (BaseUserContextMenu cmd : contextMenu) {
+            String title = cmd.getTitle();
+            userContextCmds.putIfAbsent(title, cmd);
+            logger.info("✅ Registered user context menu: **{}**", title);
+        }
+
+        return this;
+    }
+
+    public CommandRegistrar registerUserContext(ModernBaseUserContextMenu... contextMenu) {
+        if (commitedAll.get()) {
+            throw new IllegalStateException("Cannot register more command after you've commited all!");
+        }
+
+        for (ModernBaseUserContextMenu cmd : contextMenu) {
+            Class<?> tClass = cmd.getClass();
+            if(!tClass.isAnnotationPresent(ContextMenu.class)) {
+                throw new MissingAnnotationException(ContextMenu.class, tClass);
+            }
+
+            ContextMenu contextMenu1 = tClass.getAnnotation(ContextMenu.class);
+            String interactionName = contextMenu1.interactionName();
+            if(interactionName.isEmpty()) {
+                throw new IllegalStateException("Interaction Name trong " + tClass.getSimpleName() +
+                        " must not be empty!");
+            }
+
+            userContextCmds.putIfAbsent(interactionName, cmd);
+            logger.info("✅ Registered user context menu: **{}**", interactionName);
+        }
+
+        return this;
+    }
+
+    public CommandRegistrar registerMessageContext(BaseMessageContextMenu... contextMenus) {
+        if (commitedAll.get()) {
+            throw new IllegalStateException("Cannot register more command after you've commited all!");
+        }
+
+        for (BaseMessageContextMenu cmd : contextMenus) {
+            String title = cmd.getTitle();
+            messageContextCmds.putIfAbsent(title, cmd);
+            logger.info("✅ Registered message context menu: **{}**", title);
+        }
+
+        return this;
+    }
+
+    public CommandRegistrar registerMessageContext(ModernBaseMessageContextMenu... contextMenus) {
+        if (commitedAll.get()) {
+            throw new IllegalStateException("Cannot register more command after you've commited all!");
+        }
+
+        for (ModernBaseMessageContextMenu cmd : contextMenus) {
+            Class<?> tClass = cmd.getClass();
+            if(!tClass.isAnnotationPresent(ContextMenu.class)) {
+                throw new MissingAnnotationException(ContextMenu.class, tClass);
+            }
+
+            ContextMenu contextMenu1 = tClass.getAnnotation(ContextMenu.class);
+            String interactionName = contextMenu1.interactionName();
+            if(interactionName.isEmpty()) {
+                throw new IllegalStateException("Interaction Name trong " + tClass.getSimpleName() +
+                        " must not be empty!");
+            }
+
+            messageContextCmds.putIfAbsent(interactionName, cmd);
+            logger.info("✅ Registered message context menu: **{}**", interactionName);
+        }
+
+        return this;
+    }
+
+    // ===== Commit commands =====
 
     /**
      * Gửi toàn bộ danh sách lệnh lên máy chủ Discord.
      */
     public void commitAllCommands(@Nullable Guild guild) {
-        if (commitedAll.getAndSet(true)) return; // Tránh gọi 2 lần
+        if (commitedAll.getAndSet(true)) return; // prevent call twice
 
         CommandListUpdateAction updateAction = guild == null ? jda.updateCommands() : guild.updateCommands();
         List<CommandData> commandDataList = new ArrayList<>();
 
-        for (LegacyBaseCommand cmd : commands.values()) {
+        for (LegacyBaseCommand cmd : slashCmds.values()) {
             CommandData data = ((MaincommandRegistry) cmd).getCommand();
             commandDataList.add(data);
         }
@@ -85,13 +172,15 @@ public class CommandRegistrar {
         );
     }
 
+    // ===== Handle events =====
+
     /**
      * Hàm này sẽ được gọi từ một ListenerAdapter để xử lý khi có người dùng gõ lệnh.
      */
     public void onSlashCommandEvent(SlashCommandInteractionEvent event) {
         String commandName = event.getName();
 
-        LegacyBaseCommand command = commands.get(commandName);
+        LegacyBaseCommand command = slashCmds.get(commandName);
         if (command == null) {
             event.reply("❌ Lệnh này không tồn tại hoặc chưa được nạp vào hệ thống.").setEphemeral(true).queue();
             return;
@@ -101,49 +190,8 @@ public class CommandRegistrar {
         command.handle(event);
     }
 
-    private final Map<String, BaseUserContextMenu> userContextCmds = new HashMap<>();
-    private final Map<String, BaseMessageContextMenu> messageContextCmds = new HashMap<>();
-
-    /**
-     * Đăng ký một User Context Menu
-     *
-     * @param contextMenu Instance của context menu
-     *
-     * @throws MissingAnnotationException
-     * @throws InvalidRegistrationNameException
-     */
-    public void register(@NotNull BaseUserContextMenu contextMenu) {
-        Class<?> tClass = contextMenu.getClass();
-        if(!tClass.isAnnotationPresent(ContextMenu.class)) {
-            throw new MissingAnnotationException(ContextMenu.class, tClass);
-        }
-
-        ContextMenu contextMenu1 = tClass.getAnnotation(ContextMenu.class);
-        String interactionName = contextMenu1.interactionName();
-        if(interactionName.isEmpty()) {
-            throw new InvalidRegistrationNameException("Interaction Name trong " + tClass.getSimpleName() +
-                    " không được để trống!");
-        }
-
-        jda.updateCommands().addCommands(Commands.context(Command.Type.USER, interactionName)).queue();
-
-        commands.put(interactionName, contextMenu);
-        logger.info("✅ Registered user context menu: **{}**", interactionName);
-    }
-
-    /**
-     * ?
-     * Cảnh báo: Khuyến khích nên đăng ký từng context menu thay vì một list để tránh trường hợp throw
-     * dẫn đến các phần tử còn lại không được duyệt
-     * @param contextMenus
-     */
-    @ApiStatus.Obsolete // obsolete là annotation, tương tự deprecated nhưng yếu hơn
-    public void register(@NotNull BaseUserContextMenu... contextMenus) {
-        Stream.of(contextMenus).forEach(this::register);
-    }
-
-    public void onUserContextInteraction(@NotNull UserContextInteractionEvent event) {
-        BaseUserContextMenu menu = commands.get(event.getName());
+    public void onUserContextEvent(UserContextInteractionEvent event) {
+        BaseUserContextMenu menu = slashCmds.get(event.getName());
         if (menu == null) return;
 
         try {
@@ -155,8 +203,6 @@ public class CommandRegistrar {
             event.reply("❌ Có lỗi xảy ra.").setEphemeral(true).queue();
         }
     }
-
-    public void onUserContextEvent(UserContextInteractionEvent event) {}
 
     public void onMessageContextEvent(MessageContextInteractionEvent event) {}
 }
