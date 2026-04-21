@@ -1,7 +1,6 @@
-package com.dianxin.tori.api.commands;
+package com.dianxin.tori.api.commands.registry;
 
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import org.jetbrains.annotations.ApiStatus;
 
 /**
  * An interface used to register and define main Discord slash commands.
