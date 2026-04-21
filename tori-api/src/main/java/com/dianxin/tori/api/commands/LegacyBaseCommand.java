@@ -19,6 +19,7 @@ import java.util.List;
  * BaseCommand phiên bản tối ưu hóa hiệu suất tĩnh.
  * Loại bỏ hoàn toàn quá trình quét Annotation (Reflection) để đảm bảo tốc độ
  * thực thi nhanh nhất, tránh lỗi "Bot is thinking" quá 3 giây của Discord.
+ *
  */
 @Deprecated(forRemoval = true)
 @ApiStatus.ScheduledForRemoval(inVersion = "2.2.5")

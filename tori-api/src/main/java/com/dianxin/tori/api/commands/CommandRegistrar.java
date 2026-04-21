@@ -1,11 +1,11 @@
 package com.dianxin.tori.api.commands;
 
+import com.dianxin.tori.api.bot.JavaDiscordBot;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,14 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * @deprecated use {@link CommandRegistrar} instead
- */
-@Deprecated(forRemoval = true)
-@ApiStatus.ScheduledForRemoval(inVersion = "2.2.5")
-@SuppressWarnings("unused")
-public class LegacyCommandHandler {
+public class CommandRegistrar {
     private final JDA jda;
+    private final JavaDiscordBot bot;
 
     // Lưu trữ các lệnh đã đăng ký.
     // Key là tên lệnh (vd: "play", "ban"), Value là class thực thi lệnh đó.
@@ -29,8 +24,9 @@ public class LegacyCommandHandler {
 
     private final AtomicBoolean commitedAll = new AtomicBoolean(false);
 
-    public LegacyCommandHandler(JDA jda) {
-        this.jda = jda;
+    public CommandRegistrar(JavaDiscordBot bot) {
+        this.jda = bot.getJda();
+        this.bot = bot;
     }
 
     /**
