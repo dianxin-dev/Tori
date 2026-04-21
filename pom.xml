@@ -13,6 +13,7 @@
   </modules>
 
   <name>Tori</name>
+  <!--suppress HttpUrlsUsage -->
   <url>http://maven.apache.org</url>
 
   <properties>

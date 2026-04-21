@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainServerConfiguration implements ServerConfiguration {
-    private FileConfiguration configuration;
+    private final FileConfiguration configuration;
 
     public MainServerConfiguration(File file) throws IOException {
         this.configuration = new YamlConfiguration();

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 
-@SuppressWarnings({"FieldCanBeLocal"})
 public class Main {
     public static final Instant BOOT_TIME = Instant.now(); // save when press start
     private static final Logger log = LoggerFactory.getLogger(Main.class);
