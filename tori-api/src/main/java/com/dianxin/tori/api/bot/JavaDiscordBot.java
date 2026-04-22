@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -67,7 +69,7 @@ import java.util.EnumSet;
  * }
  * }</pre>
  */
-@SuppressWarnings({"unused", "EmptyMethod"})
+@SuppressWarnings({"unused", "EmptyMethod", "SameReturnValue", "CommentedOutCode"})
 public abstract class JavaDiscordBot {
     private JDA jda;
     private IBotMeta meta;
@@ -84,8 +86,7 @@ public abstract class JavaDiscordBot {
     final void internalSetMeta(IBotMeta meta) {
         this.meta = meta;
 
-        // Khởi tạo và tạo thư mục NGAY LẬP TỨC khi bot được nạp meta
-        // Thư mục sẽ có dạng: plugins/bots/BotName
+        // format plugins/bots/BotName
         this.dataFolder = new File("bots", meta.botName());
         if (!this.dataFolder.exists()) {
             this.dataFolder.mkdirs();
@@ -141,6 +142,27 @@ public abstract class JavaDiscordBot {
 
         if(ToriProvider.getConfig().isIgnoreErrorsOnRestAction()) {
             RestAction.setPassContext(true);
+        }
+
+        if(ToriProvider.getConfig().isGracefulLogOnUnknownInteractionError()) {
+            RestAction.setDefaultFailure(th -> {
+                if (th instanceof ErrorResponseException errorResponseException) {
+                    if (errorResponseException.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                        logger.warn("⚠️ Interaction expired or already acknowledged (Code 10062). Ignore this warning.");
+                        return; // prevent print stack trace
+                    }
+
+                    // Can catch any other exception code 50013: Missing Permissions
+//                    if (errorResponseException.getErrorResponse() == ErrorResponse.MISSING_PERMISSIONS) {
+//                        logger.warn("⚠️ Bot is missing permissions to perform a RestAction.");
+//                        return;
+//                    }
+
+                    logger.error("❌ Unhandled RestAction exception occurred:", th);
+                }
+            });
+
+            logger.info("✅ Global Exception Handler has been registered!");
         }
 
         logger.info("Bot {} initialize successfully.", meta.botName());

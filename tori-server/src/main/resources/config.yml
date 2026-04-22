@@ -4,32 +4,41 @@
 
 # ------------------------------------------------------------------------------
 # JDA (Java Discord API) Default Configuration
-# These are the default settings applied to every bot instance running 
+# These are the default settings applied to every bot instance running
 # within the Tori Server environment.
 # ------------------------------------------------------------------------------
 jda-default:
   rest-action:
     # Determines how the system handles RestAction API execution failures.
-    # 
-    # - false (Default): The system forces explicit error handling using 
+    #
+    # - false (Default): The system forces explicit error handling using
     #   queue(success, failure). This ensures no errors are silently swallowed.
-    # - true: The system acts as "fire-and-forget", falling back to queue(success) 
+    # - true: The system acts as "fire-and-forget", falling back to queue(success)
     #   and ignoring potential API errors.
     #
     # API JAVADOC NOTE (Regarding Context Exceptions):
-    # If enabled to pass ContextException as a root-cause to all failure consumers, 
-    # this might cause a PERFORMANCE DECREASE due to the creation of exceptions 
+    # If enabled to pass ContextException as a root-cause to all failure consumers,
+    # this might cause a PERFORMANCE DECREASE due to the creation of exceptions
     # for EVERY execution.
-    # It is recommended to keep global error ignoring 'false' and pass a context 
-    # consumer as failure manually using `queue(success, ContextException.here(failure))` 
+    # It is recommended to keep global error ignoring 'false' and pass a context
+    # consumer as failure manually using `queue(success, ContextException.here(failure))`
     # in your codebase where stack-trace context is actually needed.
     ignore-errors: false
+
+    # Controls how the server logs Discord API Error 10062 (Unknown Interaction).
+    # This error typically occurs when a bot takes longer than 3 seconds to
+    # acknowledge a slash command or context menu, causing the interaction to expire.
+    #
+    # - true (Recommended): Suppresses the massive default JDA stack trace and
+    #   instead prints a clean, single-line warning in the console.
+    # - false: Prints the full ErrorResponseException and ContextException stack traces.
+    graceful-log-on-unknown-interaction-error: true
 
 # ------------------------------------------------------------------------------
 # Internal Web Server Configuration
 # ------------------------------------------------------------------------------
 # Enables or disables the internal HTTP Socket server.
-# Set to 'true' to allow the bot to host local web pages (e.g., /changelogs, 
-# dashboards, or API endpoints). 
+# Set to 'true' to allow the bot to host local web pages (e.g., /changelogs,
+# dashboards, or API endpoints).
 # Note: This feature is currently marked as (beta).
 # open-socket: false

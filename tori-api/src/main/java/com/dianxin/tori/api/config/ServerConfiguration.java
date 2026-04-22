@@ -1,6 +1,8 @@
 package com.dianxin.tori.api.config;
 
 import com.dianxin.core.api.config.yaml.FileConfiguration;
+import net.dv8tion.jda.api.exceptions.ContextException;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 /**
  * Represents the core configuration settings for the Tori Server.
@@ -23,4 +25,13 @@ public interface ServerConfiguration {
      * {@code false} if they require explicit handling.
      */
     boolean isIgnoreErrorsOnRestAction();
+
+    /**
+     * Checks whether logs Discord API Error is formatted gracefully.
+     *
+     * @return {@code true} if Suppresses the massive default JDA stack trace and, instead prints
+     * a clean, single-line warning in the console, when
+     * {@code false} if they prints the full {@link ErrorResponseException} and {@link ContextException} stack traces.
+     */
+    boolean isGracefulLogOnUnknownInteractionError();
 }

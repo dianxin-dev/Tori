@@ -24,4 +24,10 @@ public class MainServerConfiguration implements ServerConfiguration {
     public boolean isIgnoreErrorsOnRestAction() {
         return configuration.getBoolean("jda-default.rest-action.ignore-errors", true);
     }
+
+    @Override
+    public boolean isGracefulLogOnUnknownInteractionError() {
+        return configuration.getBoolean("jda-default.rest-action.graceful-log-on-unknown-interaction-error", true);
+    }
+
 }
