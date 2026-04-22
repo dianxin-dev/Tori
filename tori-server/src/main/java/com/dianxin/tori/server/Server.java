@@ -28,7 +28,7 @@ public class Server implements ToriServer {
     private Scheduler scheduler;
     private IBotLoader botLoader;
 
-    private boolean isRunning = false;
+    private static boolean isRunning = false;
 
     public Server(ServerConfiguration cf) {
         if(isRunning) {

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.Permission;
  * Implementing this interface allows developers to support multiple languages (i18n)
  * or custom bot personas without modifying the core logic.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public interface CommandReplyConfig {
 
     /**

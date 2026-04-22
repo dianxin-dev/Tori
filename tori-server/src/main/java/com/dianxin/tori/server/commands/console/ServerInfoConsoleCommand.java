@@ -4,6 +4,7 @@ import com.dianxin.core.api.console.commands.AbstractConsoleCommand;
 import com.dianxin.tori.api.base.Constants;
 import net.dv8tion.jda.api.JDAInfo;
 
+@SuppressWarnings("StringBufferReplaceableByString")
 public class ServerInfoConsoleCommand extends AbstractConsoleCommand {
     public ServerInfoConsoleCommand() {
         super("serverinfo");

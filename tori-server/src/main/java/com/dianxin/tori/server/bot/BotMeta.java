@@ -7,6 +7,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class BotMeta implements IBotMeta {
     private final String botName;
     private final String botDescription;

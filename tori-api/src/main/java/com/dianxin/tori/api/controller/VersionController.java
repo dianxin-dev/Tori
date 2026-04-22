@@ -13,7 +13,7 @@ import static com.dianxin.tori.api.base.Constants.JDA_REQUIRED_VERSION;
  * This includes validating both the running Java version and the implemented JDA
  * (Java Discord API) version against the system's minimum requirements.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SameReturnValue"})
 public final class VersionController {
     private VersionController() { }
 

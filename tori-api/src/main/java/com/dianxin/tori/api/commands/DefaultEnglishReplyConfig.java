@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.Permission;
  * The default English implementation of {@link CommandReplyConfig}.
  * Provides standard, readable error messages for all command validation failures.
  */
+@SuppressWarnings("unused")
 public class DefaultEnglishReplyConfig implements CommandReplyConfig {
     @Override
     public String getOwnerOnlyMessage() { return "❌ Only the bot owner can use this command."; }

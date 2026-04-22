@@ -2,6 +2,7 @@ package com.dianxin.tori.server.commands.console;
 
 import com.dianxin.core.api.console.commands.AbstractConsoleCommand;
 
+@SuppressWarnings("StringBufferReplaceableByString")
 public class HelpConsoleCommand extends AbstractConsoleCommand {
     public HelpConsoleCommand() {
         super("help");
