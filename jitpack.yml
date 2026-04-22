@@ -1,0 +1,7 @@
+# ProjectDir/jitpack.yml
+
+jdk:
+  - openjdk21
+
+install:
+  - ./mvnw clean install -DskipTests
