@@ -39,9 +39,9 @@ public abstract class BaseUserContextMenu implements IUserContextMenu {
     /**
      * Constructs a statically configured BaseUserContextMenu with explicit parameters.
      *
+     * @param title                   The name or title of the context menu displayed in Discord.
      * @param jda                     The {@link JDA} instance running this command.
      * @param meta                    The {@link IBotMeta} containing the bot's metadata.
-     * @param title                   The name or title of the context menu displayed in Discord.
      * @param isDefer                 Whether the reply should be automatically deferred.
      * @param guildOnly               Whether the command is restricted to guilds (servers).
      * @param ownerOnly               Whether the command is restricted strictly to the bot owner.
@@ -51,7 +51,7 @@ public abstract class BaseUserContextMenu implements IUserContextMenu {
      * @param selfPermissionsRequired A list of permissions required by the bot itself.
      * @param isDebug                 Whether to log debug information upon execution.
      */
-    public BaseUserContextMenu(JDA jda, IBotMeta meta, String title, boolean isDefer, boolean guildOnly, boolean ownerOnly,
+    public BaseUserContextMenu(String title, JDA jda, IBotMeta meta, boolean isDefer, boolean guildOnly, boolean ownerOnly,
                                boolean privateChannelOnly, boolean directMessageOnly,
                                List<Permission> permissionsRequired,
                                List<Permission> selfPermissionsRequired,
