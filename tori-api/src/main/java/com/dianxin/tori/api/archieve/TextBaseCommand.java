@@ -36,10 +36,6 @@ public abstract class TextBaseCommand {
     private final List<Permission> permissionsRequired;
     private final List<Permission> selfPermissionsRequired;
 
-    public TextBaseCommand(TextCommandBuilder builder) {
-        this(ToriServices.getJda(), ToriServices.getBotMeta(), builder);
-    }
-
     public TextBaseCommand(JDA jda, BotMeta meta, TextCommandBuilder builder) {
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.jda = jda;

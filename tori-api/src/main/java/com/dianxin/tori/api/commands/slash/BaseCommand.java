@@ -153,7 +153,7 @@ public abstract class BaseCommand {
     private void logDebug(SlashCommandInteractionEvent event) {
         if (!getClass().isAnnotationPresent(DebugCommand.class)) return;
 
-        logger.debug("[CMD] {} by {} | {}",
+        logger.debug("[Command] {} by {} | {}",
                 event.getName(),
                 event.getUser().getAsTag(),
                 event.getCommandString()

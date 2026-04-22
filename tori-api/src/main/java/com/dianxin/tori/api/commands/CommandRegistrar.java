@@ -71,7 +71,7 @@ public class CommandRegistrar {
 
         for (LegacyBaseCommand cmd : cmdInstances) {
             if (cmd instanceof MaincommandRegistry registry) {
-                String commandName = registry.getCommand().getName(); // Tự động lấy tên lệnh từ CommandData để làm Key
+                String commandName = registry.getCommand().getName();
                 slashCmds.put(commandName, cmd);
             } else {
                 throw new IllegalArgumentException("Lệnh " + cmd.getClass().getSimpleName() + " phải implements MaincommandRegistry!");

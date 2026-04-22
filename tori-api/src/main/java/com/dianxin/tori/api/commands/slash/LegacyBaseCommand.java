@@ -269,7 +269,6 @@ public abstract class LegacyBaseCommand {
             return this;
         }
 
-        // Các hàm Getter để BaseCommand đọc cấu hình
         public boolean isDefer() { return isDefer; }
         public boolean isGuildOnly() { return guildOnly; }
         public boolean isOwnerOnly() { return ownerOnly; }
