@@ -45,6 +45,8 @@ public class CommandRegistrar {
     private final JDA jda;
     private final JavaDiscordBot bot;
 
+    private CommandReplyConfig replyConfig = new DefaultEnglishReplyConfig();
+
     private final Map<String, LegacyBaseCommand> slashCmds = new HashMap<>();
     private final Map<String, IUserContextMenu> userContextCmds = new HashMap<>();
     private final Map<String, IMessageContextMenu> messageContextCmds = new HashMap<>();
@@ -54,6 +56,21 @@ public class CommandRegistrar {
     public CommandRegistrar(JavaDiscordBot bot) {
         this.jda = bot.getJda();
         this.bot = bot;
+    }
+
+    /**
+     * Sets the custom reply configuration for command interactions.
+     * <p>
+     * This configuration allows developers to customize the messages sent by the registrar
+     * when command requirements—such as those defined by annotations like {@code @OwnerOnly}
+     * or {@code @RequirePermissions}—are not met.
+     *
+     * @param config The {@link CommandReplyConfig} instance containing the custom messages.
+     * @return This {@link CommandRegistrar} instance to allow for method chaining.
+     */
+    public CommandRegistrar setReplyConfig(CommandReplyConfig config) {
+        this.replyConfig = config;
+        return this;
     }
 
     /**
@@ -74,7 +91,7 @@ public class CommandRegistrar {
                 String commandName = registry.getCommand().getName();
                 slashCmds.put(commandName, cmd);
             } else {
-                throw new IllegalArgumentException("Lệnh " + cmd.getClass().getSimpleName() + " phải implements MaincommandRegistry!");
+                throw new IllegalArgumentException("Command " + cmd.getClass().getSimpleName() + " must implements MaincommandRegistry!");
             }
         }
         return this;
@@ -83,7 +100,8 @@ public class CommandRegistrar {
     @ApiStatus.AvailableSince("26.2.226")
     public CommandRegistrar registerSlash(BaseCommand... cmds) {
         // TODO
-        return this;
+        throw new UnsupportedOperationException("Will support soon!");
+        // return this;
     }
 
     /**
@@ -249,7 +267,7 @@ public class CommandRegistrar {
             return;
         }
 
-        command.handle(event); // execute command
+        command.handle(event, replyConfig); // execute command
     }
 
     /**
