@@ -165,7 +165,7 @@ public class CommandRegistrar {
             ContextMenu contextMenu1 = tClass.getAnnotation(ContextMenu.class);
             String interactionName = contextMenu1.interactionName();
             if(interactionName.isEmpty()) {
-                throw new IllegalStateException("Interaction Name trong " + tClass.getSimpleName() +
+                throw new IllegalStateException("Interaction Name in " + tClass.getSimpleName() +
                         " must not be empty!");
             }
 
@@ -220,7 +220,7 @@ public class CommandRegistrar {
             ContextMenu contextMenu1 = tClass.getAnnotation(ContextMenu.class);
             String interactionName = contextMenu1.interactionName();
             if(interactionName.isEmpty()) {
-                throw new IllegalStateException("Interaction Name trong " + tClass.getSimpleName() +
+                throw new IllegalStateException("Interaction Name in " + tClass.getSimpleName() +
                         " must not be empty!");
             }
 

@@ -35,6 +35,7 @@ public abstract class ModernBaseUserContextMenu implements IUserContextMenu {
         this.jda = jda;
         this.botMeta = meta;
     }
+
     /**
      * Retrieves the logger instance for the current command.
      * * @return The {@link Logger} instance.
