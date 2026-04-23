@@ -72,9 +72,9 @@ In your bot's `pom.xml`, include `tori-api` with the `provided` scope:
     
     <dependencies>
         <dependency>
-            <groupId>com.dianxin.tori</groupId>
+            <groupId>com.github.hungdx-t1.Tori</groupId>
             <artifactId>tori-api</artifactId>
-            <version>26.4.231</version>
+            <version>26.4.234</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
