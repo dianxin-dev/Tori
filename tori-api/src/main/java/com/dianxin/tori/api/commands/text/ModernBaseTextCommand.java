@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 /**
  * An annotation-driven base class for legacy text commands.
  */
+@SuppressWarnings("unused")
 @ApiStatus.Obsolete(since = "Discord Message Content Intent restrictions")
 public abstract class ModernBaseTextCommand implements ITextCommand {
     private final Logger logger;
