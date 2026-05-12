@@ -10,6 +10,7 @@
   <modules>
     <module>tori-api</module>
     <module>tori-server</module>
+    <module>tori-extension-dave</module>
   </modules>
 
   <name>Tori</name>
@@ -21,6 +22,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+
+    <jdave.version>0.1.8</jdave.version>
   </properties>
 
   <dependencies>
