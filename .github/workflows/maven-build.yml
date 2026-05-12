@@ -30,7 +30,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: DianxinCore-Build-${{ github.sha }}
+          name: Tori-Build-${{ github.sha }}
           path: |
             tori-api/target/*.jar
             tori-server/target/*.jar

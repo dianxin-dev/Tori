@@ -1,4 +1,4 @@
-name: Build & Release DianxinCore
+name: Build & Release Tori
 
 on:
   release:
