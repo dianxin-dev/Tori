@@ -35,6 +35,18 @@ public class Main {
 
         ToriProvider.setServer(server);
 
+        // Check Java version if JDave is present (requires Java 25+)
+        if(ToriProvider.hasJDave()) {
+            try {
+                VersionController.checkJavaVersionForJDaveOrThrow();
+                log.info("✅ JDave audio encryption is enabled. Java version check passed.");
+            } catch (UnsupportedOperationException e) {
+                log.error("❌ {}", e.getMessage(), e);
+                System.exit(-1);
+                return;
+            }
+        }
+
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             String threadName = thread.getName();
 
@@ -62,6 +74,9 @@ public class Main {
                         threadName, throwable);
             } else if (throwable instanceof IllegalStateException) {
                 log.error("[ILLEGAL-STATE] Thread '{}' encountered an illegal state: {}",
+                        threadName, throwable.getMessage(), throwable);
+            } else if (throwable instanceof UnsupportedClassVersionError) {
+                log.error("[UNSUPPORTED-JAVA-VERSION] Thread '{}' failed to load a class due to incompatible Java version: {}",
                         threadName, throwable.getMessage(), throwable);
             } else {
                 // Default handling for other exceptions
