@@ -35,6 +35,18 @@ public class Main {
 
         ToriProvider.setServer(server);
 
+        // Check Java version if JDave is present (requires Java 25+)
+        if(ToriProvider.hasJDave()) {
+            try {
+                VersionController.checkJavaVersionForJDaveOrThrow();
+                log.info("✅ JDave audio encryption is enabled. Java version check passed.");
+            } catch (UnsupportedOperationException e) {
+                log.error("❌ {}", e.getMessage(), e);
+                System.exit(-1);
+                return;
+            }
+        }
+
         Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
             String threadName = thread.getName();
 

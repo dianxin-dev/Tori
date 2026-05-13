@@ -1,6 +1,7 @@
 package com.dianxin.tori.api.controller;
 
 import com.dianxin.core.api.utils.VersionManager;
+import com.dianxin.tori.api.base.Constants;
 import net.dv8tion.jda.api.JDAInfo;
 
 import java.util.Arrays;
@@ -77,6 +78,25 @@ public final class VersionController {
             if (a < b) return false;
         }
         return true; // equal
+    }
+
+    /**
+     * Checks if the currently running Java version meets the minimum required version for JDave support.
+     * JDave requires Java 25 or higher for optimal audio encryption performance.
+     *
+     * @throws UnsupportedOperationException if the running Java version is lower than Java 25.
+     */
+    public static void checkJavaVersionForJDaveOrThrow() {
+        int javaVersion = VersionManager.getJavaVersionRunning();
+        int JDAVE_REQUIRED_VERSION = Constants.JDAVE_REQUIRED_JAVA_VERSION;
+
+        if (javaVersion < JDAVE_REQUIRED_VERSION) {
+            throw new UnsupportedOperationException(
+                    "JDave requires Java " + JDAVE_REQUIRED_VERSION +
+                            " or higher, but you are running Java " + javaVersion + "! " +
+                            "Please upgrade your Java runtime environment."
+            );
+        }
     }
 
     private static int[] parse(String v) {
