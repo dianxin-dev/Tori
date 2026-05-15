@@ -7,6 +7,8 @@
 # These are the default settings applied to every bot instance running
 # within the Tori Server environment.
 # ------------------------------------------------------------------------------
+console:
+  debug: false
 jda-default:
   rest-action:
     # Determines how the system handles RestAction API execution failures.

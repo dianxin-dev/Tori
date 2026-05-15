@@ -34,4 +34,6 @@ public interface ServerConfiguration {
      * {@code false} if they prints the full {@link ErrorResponseException} and {@link ContextException} stack traces.
      */
     boolean isGracefulLogOnUnknownInteractionError();
+
+    boolean isDebug();
 }
