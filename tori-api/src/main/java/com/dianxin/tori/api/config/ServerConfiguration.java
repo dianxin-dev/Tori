@@ -35,5 +35,11 @@ public interface ServerConfiguration {
      */
     boolean isGracefulLogOnUnknownInteractionError();
 
+    /**
+     * Checks whether the global debug mode is enabled for the server.
+     * When enabled, additional trace and debug level logging will be output to the console.
+     *
+     * @return {@code true} if debug mode is active, {@code false} otherwise.
+     */
     boolean isDebug();
 }
